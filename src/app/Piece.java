@@ -79,8 +79,10 @@ class Pawn extends Piece{
 			for(int i=-1;i<2;i+=2) {
 				if(this.getX()<1)
 					break;
+				if(this.getY()+i<0 || this.getY()+i>7)
+					continue;
 				if(board.getBox(this.getX()-1, getY()+i).hasPiece()) 
-					if(board.getBox(this.getX()-1, getY()+i).getPiece().getColor().equals(this.getColor())) 
+					if(!board.getBox(this.getX()-1, getY()+i).getPiece().getColor().equals(this.getColor())) 
 						board.getBox(this.getX()-1, getY()+i).setConsumeHighlight(true);
 			}
 		}
@@ -104,8 +106,10 @@ class Pawn extends Piece{
 			for(int i=-1;i<2;i+=2) {
 				if(this.getX()>6)
 					break;
+				if(this.getY()+i<0 || this.getY()+i>7)
+					continue;
 				if(board.getBox(this.getX()+1, getY()+i).hasPiece()) 
-					if(board.getBox(this.getX()+1, getY()+i).getPiece().getColor().equals(this.getColor())) 
+					if(!board.getBox(this.getX()+1, getY()+i).getPiece().getColor().equals(this.getColor())) 
 						board.getBox(this.getX()+1, getY()+i).setConsumeHighlight(true);
 			}
 		}

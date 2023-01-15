@@ -58,6 +58,8 @@ public class Board {
 		gametable[moving_piece.getX()][moving_piece.getY()].setHasPiece(false);
 		gametable[moving_piece.getX()][moving_piece.getY()].setPiece(null);
 		gametable[dest_x][dest_y].setPiece(moving_piece);
+		moving_piece.setX(dest_x);
+		moving_piece.setY(dest_y);
 		gametable[moving_piece.getX()][moving_piece.getY()].setHasPiece(true);	
 	}
 	
