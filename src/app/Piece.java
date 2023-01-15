@@ -120,6 +120,14 @@ class Pawn extends Piece{
 	public void passByTaken() {
 		
 	}
+
+	public boolean getIsFirst(){
+		return is_first;
+	}
+
+	public void setIsFirst(boolean tf){
+		is_first = tf;
+	}
 }
 
 class Rock extends Piece{
@@ -241,7 +249,7 @@ class Queen extends Piece{
 	}
 }
 class King extends Piece{
-	private boolean is_first;
+	private boolean is_first = true;
 	private final int[] X_VECTOR = {-1,-1,0,1,1,1,0,-1};
 	private final int[] Y_VECTOR = {0,1,1,1,0,-1,-1,-1};
 	

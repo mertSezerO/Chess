@@ -72,8 +72,8 @@ public class GameDisplayer{
 	}
 	
 	//overloaded method
-	public void updateTable(int rock_x,int rock_y,int king_x,int king_y,int fin_x,int fin_y) {
-		board.rock(rock_x, rock_y, king_x, king_y, fin_x, fin_y);
+	public void updateTable(int king_x,int king_y,int fin_x,int fin_y) {
+		board.rock(king_x, king_y, fin_x, fin_y);
 		startOver();
 	}
 	
@@ -134,6 +134,8 @@ public class GameDisplayer{
 							destinationTile= board.getBox(locationX, locationY);
 							if(destinationTile.getIsConsumeHighlight() || destinationTile.getIsHighlighted())
 								updateTable(locationX, locationY);
+							else if(destinationTile.getIsRockHighlight())
+								updateTable(sourceTile.getX() , sourceTile.getY(), destinationTile.getX(), destinationTile.getY());
 							else
 								destinationTile = null;
 						}

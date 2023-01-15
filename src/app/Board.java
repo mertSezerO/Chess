@@ -60,17 +60,37 @@ public class Board {
 		gametable[dest_x][dest_y].setPiece(moving_piece);
 		moving_piece.setX(dest_x);
 		moving_piece.setY(dest_y);
-		gametable[moving_piece.getX()][moving_piece.getY()].setHasPiece(true);	
+		gametable[moving_piece.getX()][moving_piece.getY()].setHasPiece(true);
+		if(gametable[dest_x][dest_y].getPiece() instanceof Pawn)
+			((Pawn)gametable[dest_x][dest_y].getPiece()).setIsFirst(false);
 	}
 	
-	public void rock(int rock_x,int rock_y,int king_x,int king_y,int fin_x,int fin_y) {
-		int short_or_long = (rock_y<king_y) ? 1 : -1;
-		gametable[fin_x][fin_y].setPiece(gametable[king_x][king_y].getPiece());
+	public void rock(int king_x,int king_y,int fin_x,int fin_y) {
+		int short_or_long = (fin_y<king_y) ? 1 : -1;
+		/*gametable[fin_x][fin_y].setPiece(gametable[king_x][king_y].getPiece());
 		gametable[king_x][king_y].setPiece(null);
 		gametable[king_x][king_y].setHasPiece(false);
 		gametable[fin_x][fin_y+short_or_long].setPiece(gametable[rock_x][rock_y].getPiece());
 		gametable[rock_x][rock_y].setPiece(null);
-		gametable[rock_x][rock_y].setHasPiece(false);
+		gametable[rock_x][rock_y].setHasPiece(false);*/
+		gametable[king_x][king_y].setHasPiece(false);
+		gametable[king_x][king_y].setPiece(null);
+		gametable[fin_x][fin_y].setHasPiece(true);
+		gametable[fin_x][fin_y].setPiece(moving_piece);
+		if(fin_y<king_y){
+			gametable[fin_x][fin_y+short_or_long].setPiece(gametable[king_x][0].getPiece());
+			gametable[fin_x][fin_y+short_or_long].setHasPiece(true);
+			gametable[king_x][0].setPiece(null);
+			gametable[king_x][0].setHasPiece(false);
+		}
+		else{
+			gametable[fin_x][fin_y+short_or_long].setPiece(gametable[king_x][7].getPiece());
+			gametable[fin_x][fin_y+short_or_long].setHasPiece(true);
+			gametable[king_x][7].setPiece(null);
+			gametable[king_x][7].setHasPiece(false);
+		}
+		((King)gametable[fin_x][fin_y].getPiece()).setIsFirst(false);
+		((Rock)gametable[fin_x][fin_y+short_or_long].getPiece()).setHasMoved(true);
 	}
 	
 	public void highlight(int x, int y) {
