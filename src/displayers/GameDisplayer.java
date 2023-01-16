@@ -130,12 +130,23 @@ public class GameDisplayer{
 						}
 						else {
 							destinationTile= board.getBox(locationX, locationY);
-							if(destinationTile.getIsConsumeHighlight() || destinationTile.getIsHighlighted())
-								updateTable(locationX, locationY);
-							else if(destinationTile.getIsRockHighlight())
-								updateTable(sourceTile.getX() , sourceTile.getY(), destinationTile.getX(), destinationTile.getY());
-							else
-								destinationTile = null;
+							if(destinationTile.getPiece() != null && destinationTile.getPiece().getColor().equals(sourceTile.getPiece().getColor())){
+								sourceTile = destinationTile;
+								startOver();
+								highlight(sourceTile.getX(), sourceTile.getY());
+							}
+							else{
+								if(destinationTile.getIsConsumeHighlight() || destinationTile.getIsHighlighted()){
+									updateTable(locationX, locationY);
+									sourceTile = null;
+								}
+								else if(destinationTile.getIsRockHighlight()){
+									updateTable(sourceTile.getX() , sourceTile.getY(), destinationTile.getX(), destinationTile.getY());
+									sourceTile = null;
+								}
+								else
+									destinationTile = null;
+							}
 						}
 					}
 				}
