@@ -132,10 +132,38 @@ public class Board {
 					}
 				}
 				else if(gametable[x/8][x%8].getPiece().getColor().equals(lastMoved) && gametable[x/8][x%8].getPiece() instanceof Bishop){
-	
+					Bishop bishop = (Bishop)gametable[x/8][x%8].getPiece();
+					for(int i=0;i<4;i++){
+						for(int j=1;j<9;j++){
+							if(bishop.getX()+bishop.getXVector(i)*j>=0 && bishop.getX()+bishop.getXVector(i)*j<8 && bishop.getY()+bishop.getYVector(i)*j>=0 && bishop.getY()+bishop.getYVector(i)*j<8) {
+								if(this.getBox(bishop.getX()+bishop.getXVector(i)*j, bishop.getY()+bishop.getYVector(i)*j).hasPiece()) {
+									Box box = this.getBox(bishop.getX()+bishop.getXVector(i)*j, bishop.getY()+bishop.getYVector(i)*j);
+									if(box.getPiece().getColor().equals(moving) && box.getPiece().getTag().equals("King"))
+										return true;
+									else
+										break;
+								}
+								
+							}
+						}
+					}
 				}
 				else if(gametable[x/8][x%8].getPiece().getColor().equals(lastMoved) && gametable[x/8][x%8].getPiece() instanceof Queen){
-	
+					Queen queen = (Queen)gametable[x/8][x%8].getPiece();
+					for(int i=0;i<7;i++){
+						for(int j=1;j<9;j++){
+							if(queen.getX()+queen.getXVector(i)*j>=0 && queen.getX()+queen.getXVector(i)*j<8 && queen.getY()+queen.getYVector(i)*j>=0 && queen.getY()+queen.getYVector(i)*j<8) {
+								if(this.getBox(queen.getX()+queen.getXVector(i)*j, queen.getY()+queen.getYVector(i)*j).hasPiece()) {
+									Box box = this.getBox(queen.getX()+queen.getXVector(i)*j, queen.getY()+queen.getYVector(i)*j);
+									if(box.getPiece().getColor().equals(moving) && box.getPiece().getTag().equals("King"))
+										return true;
+									else
+										break;
+								}
+								
+							}
+						}
+					}
 				}
 			}
 		}
@@ -153,6 +181,7 @@ public class Board {
 				gametable[i][j].setConsumeHighlight(false);
 				gametable[i][j].setHighlighted(false);
 				gametable[i][j].setRockHighlight(false);
+				gametable[i][j].setCheckHighlight(false);
 			}
 		}
 	}
