@@ -30,6 +30,7 @@ public class GameDisplayer{
 	private Color consumeHighlight = Color.RED;
 	private Color rockHighlight = Color.GREEN;
 	private Color possibleTilesHighlight = Color.BLUE;
+	private Color checkHighlight = Color.YELLOW;
 
 	
 	private final JFrame gameFrame;
@@ -130,11 +131,15 @@ public class GameDisplayer{
 						}
 						else {
 							destinationTile= board.getBox(locationX, locationY);
+
+							//switch moving piece smoothly
 							if(destinationTile.getPiece() != null && destinationTile.getPiece().getColor().equals(sourceTile.getPiece().getColor())){
 								sourceTile = destinationTile;
 								startOver();
 								highlight(sourceTile.getX(), sourceTile.getY());
 							}
+
+							//make movement
 							else{
 								if(destinationTile.getIsConsumeHighlight() || destinationTile.getIsHighlighted()){
 									updateTable(locationX, locationY);
@@ -187,6 +192,9 @@ public class GameDisplayer{
 			}
 			else if(board.getBox(locationX, locationY).getIsRockHighlight()) {
 				setBackground(rockHighlight);
+			}
+			else if(board.getBox(locationX, locationY).getIsCheckHighlight()){
+				setBackground(checkHighlight);
 			}
 			else
 				setBackground(((locationX+locationY)%2 == 0) ? lightTileColor : darkTileColor);

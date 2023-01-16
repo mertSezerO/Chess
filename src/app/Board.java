@@ -85,11 +85,68 @@ public class Board {
 		((Rock)gametable[fin_x][fin_y+short_or_long].getPiece()).setHasMoved(true);
 	}
 	
+	//highlighting possible options
 	public void highlight(int x, int y) {
 		moving_piece=gametable[x][y].getPiece();
-		moving_piece.canGo();
+		gametable[x][y].setPiece(null);
+		gametable[x][y].setHasPiece(false);
+		if(!passiveCheck(moving_piece.getColor())){
+			gametable[x][y].setPiece(moving_piece);
+			gametable[x][y].setHasPiece(true);
+			moving_piece.canGo();
+		}
+		else{
+			gametable[x][y].setPiece(moving_piece);
+			gametable[x][y].setHasPiece(true);
+			gametable[x][y].setCheckHighlight(true);
+		}
+			
+			
 	}
 	
+	public boolean passiveCheck(String moving) {
+		String lastMoved = (moving.equals("white")) ? "black" : "white";
+		for(int x=0; x<64;x++){
+			if(gametable[x/8][x%8].hasPiece()){
+				if(gametable[x/8][x%8].getPiece().getColor().equals(lastMoved) && gametable[x/8][x%8].getPiece() instanceof Pawn){
+					continue;
+				}
+				else if(gametable[x/8][x%8].getPiece().getColor().equals(lastMoved) && gametable[x/8][x%8].getPiece() instanceof Knight){
+					continue;	
+				}
+				else if(gametable[x/8][x%8].getPiece().getColor().equals(lastMoved) && gametable[x/8][x%8].getPiece() instanceof Rock){
+					Rock rock = (Rock)gametable[x/8][x%8].getPiece();
+					for(int i=0;i<4;i++){
+						for(int j=1;j<9;j++){
+							if(rock.getX()+rock.getXVector(i)*j>=0 && rock.getX()+rock.getXVector(i)*j<8 && rock.getY()+rock.getYVector(i)*j>=0 && rock.getY()+rock.getYVector(i)*j<8) {
+								if(this.getBox(rock.getX()+rock.getXVector(i)*j, rock.getY()+rock.getYVector(i)*j).hasPiece()) {
+									Box box = this.getBox(rock.getX()+rock.getXVector(i)*j, rock.getY()+rock.getYVector(i)*j);
+									if(box.getPiece().getColor().equals(moving) && box.getPiece().getTag().equals("King"))
+										return true;
+									else
+										break;
+								}
+								
+							}
+						}
+					}
+				}
+				else if(gametable[x/8][x%8].getPiece().getColor().equals(lastMoved) && gametable[x/8][x%8].getPiece() instanceof Bishop){
+	
+				}
+				else if(gametable[x/8][x%8].getPiece().getColor().equals(lastMoved) && gametable[x/8][x%8].getPiece() instanceof Queen){
+	
+				}
+			}
+		}
+		return false;
+	}
+
+	public boolean activeCheck(){
+		return true;
+	}
+
+	//after move remove highlights
 	public void normalize() {
 		for(int i=0;i<8;i++) {
 			for(int j=0;j<8;j++) {

@@ -9,6 +9,7 @@ public class Box {
 	private boolean highlighted;
 	private boolean rockHighlight;
 	private boolean consumeHighlight;
+	private boolean checkHighlight;
 	
 	public Box(int x, int y,String color) {
 		this.x= x;
@@ -64,5 +65,11 @@ public class Box {
 	}
 	public void setConsumeHighlight(boolean consumeHighlight) {
 		this.consumeHighlight = consumeHighlight;
+	}
+	public boolean getIsCheckHighlight() {
+		return checkHighlight;
+	}
+	public void setCheckHighlight(boolean checkHighlight) {
+		this.checkHighlight = checkHighlight;
 	}
 }

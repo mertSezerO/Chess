@@ -7,7 +7,6 @@ public abstract class Piece {
 	private int x;
 	private int y;
 	private Board board;
-	private boolean isCheck;
 	
 	public Piece(String value,int x,int y,Board board,String color) {
 		this.tag = value;
@@ -15,12 +14,6 @@ public abstract class Piece {
 		this.y = y;
 		this.board = board;
 		this.color =color;
-	}
-	public boolean isCheck(){
-		return isCheck;
-	}
-	public void setIsCheck(boolean check){
-		isCheck = check;
 	}
 	public int getX() {
 		return x;
@@ -175,6 +168,14 @@ class Rock extends Piece{
 	{
 		this.hasMoved = b;
 	}
+
+	public int getXVector(int a){
+		return X_VECTOR[a];
+	}
+
+	public int getYVector(int a){
+		return Y_VECTOR[a];
+	}
 	
 }
 class Knight extends Piece{
@@ -198,6 +199,14 @@ class Knight extends Piece{
 					board.getBox(this.getX()+X_VECTOR[i], this.getY()+Y_VECTOR[i]).setHighlighted(true);
 			}
 		}
+	}
+
+	public int getXVector(int a){
+		return X_VECTOR[a];
+	}
+
+	public int getYVector(int a){
+		return Y_VECTOR[a];
 	}
 }
 class Bishop extends Piece{
@@ -226,6 +235,14 @@ class Bishop extends Piece{
 					break;
 			}
 		}
+	}
+
+	public int getXVector(int a){
+		return X_VECTOR[a];
+	}
+
+	public int getYVector(int a){
+		return Y_VECTOR[a];
 	}	
 }
 class Queen extends Piece{
@@ -254,6 +271,14 @@ class Queen extends Piece{
 					break;
 			}
 		}
+	}
+
+	public int getXVector(int a){
+		return X_VECTOR[a];
+	}
+
+	public int getYVector(int a){
+		return Y_VECTOR[a];
 	}
 }
 class King extends Piece{
@@ -309,5 +334,13 @@ class King extends Piece{
 	}
 	public void setIsFirst(boolean is_first) {
 		this.is_first = is_first;
+	}
+
+	public int getXVector(int a){
+		return X_VECTOR[a];
+	}
+
+	public int getYVector(int a){
+		return Y_VECTOR[a];
 	}
 }
