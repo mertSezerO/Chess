@@ -67,28 +67,20 @@ public class Board {
 	
 	public void rock(int king_x,int king_y,int fin_x,int fin_y) {
 		int short_or_long = (fin_y<king_y) ? 1 : -1;
-		/*gametable[fin_x][fin_y].setPiece(gametable[king_x][king_y].getPiece());
-		gametable[king_x][king_y].setPiece(null);
-		gametable[king_x][king_y].setHasPiece(false);
-		gametable[fin_x][fin_y+short_or_long].setPiece(gametable[rock_x][rock_y].getPiece());
-		gametable[rock_x][rock_y].setPiece(null);
-		gametable[rock_x][rock_y].setHasPiece(false);*/
+		int whichRock = (fin_y<king_y) ? 0 : 7;
 		gametable[king_x][king_y].setHasPiece(false);
 		gametable[king_x][king_y].setPiece(null);
 		gametable[fin_x][fin_y].setHasPiece(true);
 		gametable[fin_x][fin_y].setPiece(moving_piece);
-		if(fin_y<king_y){
-			gametable[fin_x][fin_y+short_or_long].setPiece(gametable[king_x][0].getPiece());
-			gametable[fin_x][fin_y+short_or_long].setHasPiece(true);
-			gametable[king_x][0].setPiece(null);
-			gametable[king_x][0].setHasPiece(false);
-		}
-		else{
-			gametable[fin_x][fin_y+short_or_long].setPiece(gametable[king_x][7].getPiece());
-			gametable[fin_x][fin_y+short_or_long].setHasPiece(true);
-			gametable[king_x][7].setPiece(null);
-			gametable[king_x][7].setHasPiece(false);
-		}
+
+		gametable[fin_x][fin_y+short_or_long].setPiece(gametable[king_x][whichRock].getPiece());
+		gametable[fin_x][fin_y+short_or_long].setHasPiece(true);
+		gametable[fin_x][fin_y+short_or_long].getPiece().setX(fin_x);
+		gametable[fin_x][fin_y+short_or_long].getPiece().setY(fin_y+short_or_long);
+
+		gametable[king_x][whichRock].setPiece(null);
+		gametable[king_x][whichRock].setHasPiece(false);
+
 		((King)gametable[fin_x][fin_y].getPiece()).setIsFirst(false);
 		((Rock)gametable[fin_x][fin_y+short_or_long].getPiece()).setHasMoved(true);
 	}
@@ -112,9 +104,6 @@ public class Board {
 		return gametable[x][y];
 	}
 	
-	public Box[][] getGametable() {
-		return gametable;
-	}
 	public ArrayList<Piece> getConsumed_Pieces(){
 		return consumed_pieces;
 	}

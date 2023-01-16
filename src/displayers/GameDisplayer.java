@@ -101,13 +101,11 @@ public class GameDisplayer{
 	}
 	
 	private class TilePanel extends JPanel {
-		private int tileId; 
 		private int locationX;
 		private int locationY;
 		
 		TilePanel(final BoardPanel boardPanel,int tileId) {
 			super(new GridBagLayout());
-			this.tileId = tileId;
 			this.locationX = tileId/8;
 			this.locationY = tileId-locationX*8;
 			assignTileColor();
@@ -144,25 +142,25 @@ public class GameDisplayer{
 
 				@Override
 				public void mousePressed(MouseEvent e) {
-					// TODO Auto-generated method stub
+					
 					
 				}
 
 				@Override
 				public void mouseReleased(MouseEvent e) {
-					// TODO Auto-generated method stub
+					
 					
 				}
 
 				@Override
 				public void mouseEntered(MouseEvent e) {
-					// TODO Auto-generated method stub
+					
 					
 				}
 
 				@Override
 				public void mouseExited(MouseEvent e) {
-					// TODO Auto-generated method stub
+					
 					
 				}
 			});
@@ -185,14 +183,13 @@ public class GameDisplayer{
 		
 		private void assignPieceImages(Board board) {
 			this.removeAll();
-			Piece piece = board.getGametable()[locationX][locationY].getPiece();
+			Piece piece = board.getBox(locationX, locationY).getPiece();
 			if(piece != null) {
 				try
 				{
 					BufferedImage image = ImageIO.read(new File("Images/" + piece.getColor() + " "+ piece.getTag() + ".gif"));
 					add(new JLabel(new ImageIcon(image)));
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					System.out.println("CATCHED");
 				}
 			}

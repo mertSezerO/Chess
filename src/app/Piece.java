@@ -1,11 +1,13 @@
 package app;
 
+
 public abstract class Piece {
 	private String tag;
 	private String color;
 	private int x;
 	private int y;
 	private Board board;
+	private boolean isCheck;
 	
 	public Piece(String value,int x,int y,Board board,String color) {
 		this.tag = value;
@@ -13,6 +15,12 @@ public abstract class Piece {
 		this.y = y;
 		this.board = board;
 		this.color =color;
+	}
+	public boolean isCheck(){
+		return isCheck;
+	}
+	public void setIsCheck(boolean check){
+		isCheck = check;
 	}
 	public int getX() {
 		return x;
@@ -117,7 +125,7 @@ class Pawn extends Piece{
 	public void convert() {
 		
 	}
-	public void passByTaken() {
+	public void passByTake() {
 		
 	}
 
