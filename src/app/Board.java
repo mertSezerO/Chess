@@ -7,6 +7,7 @@ public class Board {
 	private Box[][] gametable= new Box[8][8];
 	ArrayList<Piece> consumed_pieces = new ArrayList<Piece>();
 	private Piece moving_piece;
+	private boolean isCheck;
 	
 	public Board() {
 		for(int i=0;i<8;i++)
@@ -69,8 +70,12 @@ public class Board {
 		else if(moving_piece instanceof King)
 			((King)moving_piece).setIsFirst(false);
 		int activeCheck = activeCheck();
-		if(activeCheck >-1)
+		if(activeCheck >-1){
 			gametable[activeCheck/8][activeCheck%8].setCheckHighlight(true);
+			isCheck = true;
+		}
+		else
+			isCheck = false;
 	}
 	
 	public void rock(int king_x,int king_y,int fin_x,int fin_y) {
@@ -98,7 +103,7 @@ public class Board {
 		moving_piece=gametable[x][y].getPiece();
 		gametable[x][y].setPiece(null);
 		gametable[x][y].setHasPiece(false);
-		if(!passiveCheck(moving_piece.getColor())){
+		if(isCheck || !passiveCheck(moving_piece.getColor())){
 			gametable[x][y].setPiece(moving_piece);
 			gametable[x][y].setHasPiece(true);
 			moving_piece.canGo();
@@ -282,6 +287,11 @@ public class Board {
 				gametable[i][j].setRockHighlight(false);
 				if(!(gametable[i][j].getPiece() instanceof King))
 					gametable[i][j].setCheckHighlight(false);
+				else{
+					if(!isCheck){
+						gametable[i][j].setCheckHighlight(false);
+					}
+				}
 			}
 		}
 	}
