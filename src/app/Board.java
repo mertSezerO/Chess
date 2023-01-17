@@ -83,8 +83,11 @@ public class Board {
 		int whichRock = (fin_y<king_y) ? 0 : 7;
 		gametable[king_x][king_y].setHasPiece(false);
 		gametable[king_x][king_y].setPiece(null);
+
 		gametable[fin_x][fin_y].setHasPiece(true);
 		gametable[fin_x][fin_y].setPiece(moving_piece);
+		gametable[fin_x][fin_y].getPiece().setX(fin_x);
+		gametable[fin_x][fin_y].getPiece().setY(fin_y);
 
 		gametable[fin_x][fin_y+short_or_long].setPiece(gametable[king_x][whichRock].getPiece());
 		gametable[fin_x][fin_y+short_or_long].setHasPiece(true);
@@ -93,6 +96,8 @@ public class Board {
 
 		gametable[king_x][whichRock].setPiece(null);
 		gametable[king_x][whichRock].setHasPiece(false);
+
+		
 
 		((King)gametable[fin_x][fin_y].getPiece()).setIsFirst(false);
 		((Rock)gametable[fin_x][fin_y+short_or_long].getPiece()).setHasMoved(true);
