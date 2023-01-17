@@ -70,10 +70,15 @@ public class Board {
 			((Rock)movingPiece).setHasMoved(true);
 		else if(movingPiece instanceof King)
 			((King)movingPiece).setIsFirst(false);
-		int activeCheck = activeCheck(movingPiece);
+		String next = (movingPiece.getColor().equals("white")) ? "black" : "white";
+		Piece activeCheck = passiveCheck(next);
 		lastMovedPiece = movingPiece;
-		if(activeCheck >-1){
-			gametable[activeCheck/8][activeCheck%8].setCheckHighlight(true);
+		if(activeCheck != null){
+			for(int i=0;i<64 ;i++){
+				if(gametable[i/8][i%8].hasPiece())
+					if(gametable[i/8][i%8].getColor().equals(next) && gametable[i/8][i%8].getPiece() instanceof King)
+						gametable[i/8][i%8].setCheckHighlight(true);
+			}
 			isCheck = true;
 		}
 		else
@@ -131,17 +136,18 @@ public class Board {
 
 	public void desolveCheck(){
 		for(int i=0;i<64;i++){
+			//when defender could consume, this method is problematic
 			if(gametable[i/8][i%8].getIsHighlighted() || gametable[i/8][i%8].getIsConsumeHighlight()){
 				Piece piece = gametable[i/8][i%8].getPiece();
-				boolean normal = gametable[i/8][i%8].hasPiece();
+				boolean b = gametable[i/8][i%8].hasPiece();
 				gametable[i/8][i%8].setHasPiece(true);
 				gametable[i/8][i%8].setPiece(movingPiece);
-				int possible = activeCheck(lastMovedPiece);
-				if(possible > -1){
+				Piece possible = passiveCheck(movingPiece.getColor());
+				if(possible != null){
 					gametable[i/8][i%8].setHighlighted(false);
-					gametable[i/8][i%8].setConsumeHighlight(false);
+					gametable[i/8][i%8].setCheckHighlight(false);
 				}
-				gametable[i/8][i%8].setHasPiece(normal);
+				gametable[i/8][i%8].setHasPiece(b);
 				gametable[i/8][i%8].setPiece(piece);
 			}
 		}
