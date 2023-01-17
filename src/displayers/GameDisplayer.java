@@ -27,10 +27,10 @@ public class GameDisplayer{
 	
 	private Color lightTileColor = new Color(254,240,187);
 	private Color darkTileColor = new Color(17,12,12);
-	private Color consumeHighlight = Color.RED;
+	private Color consumeHighlight = Color.YELLOW;
 	private Color rockHighlight = Color.GREEN;
 	private Color possibleTilesHighlight = Color.BLUE;
-	private Color checkHighlight = Color.YELLOW;
+	private Color checkHighlight = Color.RED;
 
 	
 	private final JFrame gameFrame;
