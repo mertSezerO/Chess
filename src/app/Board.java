@@ -2,6 +2,7 @@ package app;
 
 import java.util.ArrayList;
 
+
 public class Board {
 	private Box[][] gametable= new Box[8][8];
 	ArrayList<Piece> consumed_pieces = new ArrayList<Piece>();
@@ -61,8 +62,15 @@ public class Board {
 		moving_piece.setX(dest_x);
 		moving_piece.setY(dest_y);
 		gametable[moving_piece.getX()][moving_piece.getY()].setHasPiece(true);
-		if(gametable[dest_x][dest_y].getPiece() instanceof Pawn)
-			((Pawn)gametable[dest_x][dest_y].getPiece()).setIsFirst(false);
+		if(moving_piece instanceof Pawn)
+			((Pawn)moving_piece).setIsFirst(false);
+		else if(moving_piece instanceof Rock)
+			((Rock)moving_piece).setHasMoved(true);
+		else if(moving_piece instanceof King)
+			((King)moving_piece).setIsFirst(false);
+		int activeCheck = activeCheck();
+		if(activeCheck >-1)
+			gametable[activeCheck/8][activeCheck%8].setCheckHighlight(true);
 	}
 	
 	public void rock(int king_x,int king_y,int fin_x,int fin_y) {
@@ -99,9 +107,7 @@ public class Board {
 			gametable[x][y].setPiece(moving_piece);
 			gametable[x][y].setHasPiece(true);
 			gametable[x][y].setCheckHighlight(true);
-		}
-			
-			
+		}	
 	}
 	
 	public boolean passiveCheck(String moving) {
@@ -170,8 +176,101 @@ public class Board {
 		return false;
 	}
 
-	public boolean activeCheck(){
-		return true;
+	public int activeCheck(){
+		String color=moving_piece.getColor();
+		if(moving_piece instanceof Pawn){
+			Pawn pawn = (Pawn)moving_piece;
+			if(pawn.getColor().equals("white")){
+				for(int i=-1;i<2;i+=2){
+					if(pawn.getX()<1)
+						break;
+					if(pawn.getY()+i<0 || pawn.getY()+i>7)
+						continue;
+					if(this.getBox(pawn.getX()-1, pawn.getY()+i).hasPiece()){
+						Box box = this.getBox(pawn.getX()-1, pawn.getY()+i);
+						if(box.getPiece() instanceof King && !box.getPiece().getColor().equals(color))
+							return box.getX()*8+box.getY();
+					}
+				}
+			}
+			else{
+				for(int i=-1;i<2;i+=2){
+					if(pawn.getX()>6)
+						break;
+					if(pawn.getY()+i<0 || pawn.getY()+i>7)
+						continue;
+					if(this.getBox(pawn.getX()+1, pawn.getY()+i).hasPiece()){
+						Box box = this.getBox(pawn.getX()+1, pawn.getY()+i);
+						if(box.getPiece() instanceof King && !box.getPiece().getColor().equals(color))
+							return box.getX()*8+box.getY();
+					}
+				}
+			}
+		}
+		else if(moving_piece instanceof Rock){
+			Rock rock = (Rock)moving_piece;
+			for(int i=0;i<4;i++){
+				for(int j=1;j<9;j++){
+					if(rock.getX()+rock.getXVector(i)*j>=0 && rock.getX()+rock.getXVector(i)*j<8 && rock.getY()+rock.getYVector(i)*j>=0 && rock.getY()+rock.getYVector(i)*j<8) {
+						if(this.getBox(rock.getX()+rock.getXVector(i)*j, rock.getY()+rock.getYVector(i)*j).hasPiece()) {
+							Box box = this.getBox(rock.getX()+rock.getXVector(i)*j, rock.getY()+rock.getYVector(i)*j);
+							if(!box.getPiece().getColor().equals(color) && box.getPiece().getTag().equals("King"))
+								return box.getX()*8+box.getY();
+							else
+								break;
+						}
+						
+					}
+				}
+			}
+		}
+		else if(moving_piece instanceof Bishop){
+			Bishop bishop = (Bishop)moving_piece;
+			for(int i=0;i<4;i++){
+				for(int j=1;j<9;j++){
+					if(bishop.getX()+bishop.getXVector(i)*j>=0 && bishop.getX()+bishop.getXVector(i)*j<8 && bishop.getY()+bishop.getYVector(i)*j>=0 && bishop.getY()+bishop.getYVector(i)*j<8) {
+						if(this.getBox(bishop.getX()+bishop.getXVector(i)*j, bishop.getY()+bishop.getYVector(i)*j).hasPiece()) {
+							Box box = this.getBox(bishop.getX()+bishop.getXVector(i)*j, bishop.getY()+bishop.getYVector(i)*j);
+							if(!box.getPiece().getColor().equals(color) && box.getPiece().getTag().equals("King"))
+								return box.getX()*8+box.getY();
+							else
+								break;
+						}
+						
+					}
+				}
+			}
+		}
+		else if(moving_piece instanceof Knight){
+			Knight knight = (Knight)moving_piece;
+			for(int i=0;i<8;i++) {
+				if(knight.getX()+knight.getXVector(i)>=0 && knight.getX()+knight.getXVector(i)<8 && knight.getY()+knight.getYVector(i)>=0 && knight.getY()+knight.getYVector(i)<8) {
+					if(this.getBox(knight.getX()+knight.getXVector(i), knight.getY()+knight.getYVector(i)).hasPiece()) {
+						Box box = this.getBox(knight.getX()+knight.getXVector(i), knight.getY()+knight.getYVector(i));
+						if(!box.getPiece().getColor().equals(color) && box.getPiece().getTag().equals("King"))
+							return box.getX()*8+box.getY();
+					}
+				}
+			}
+		}
+		else if(moving_piece instanceof Queen){
+			Queen queen = (Queen)moving_piece;
+			for(int i=0;i<7;i++){
+				for(int j=1;j<9;j++){
+					if(queen.getX()+queen.getXVector(i)*j>=0 && queen.getX()+queen.getXVector(i)*j<8 && queen.getY()+queen.getYVector(i)*j>=0 && queen.getY()+queen.getYVector(i)*j<8) {
+						if(this.getBox(queen.getX()+queen.getXVector(i)*j, queen.getY()+queen.getYVector(i)*j).hasPiece()) {
+							Box box = this.getBox(queen.getX()+queen.getXVector(i)*j, queen.getY()+queen.getYVector(i)*j);
+							if(!box.getPiece().getColor().equals(color) && box.getPiece().getTag().equals("King"))
+								return box.getX()*8+box.getY();
+							else
+								break;
+						}
+						
+					}
+				}
+			}
+		}
+		return -1;
 	}
 
 	//after move remove highlights
@@ -181,7 +280,8 @@ public class Board {
 				gametable[i][j].setConsumeHighlight(false);
 				gametable[i][j].setHighlighted(false);
 				gametable[i][j].setRockHighlight(false);
-				gametable[i][j].setCheckHighlight(false);
+				if(!(gametable[i][j].getPiece() instanceof King))
+					gametable[i][j].setCheckHighlight(false);
 			}
 		}
 	}
