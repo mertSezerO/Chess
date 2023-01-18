@@ -21,10 +21,14 @@ import javax.swing.JPanel;
 import java.util.*;
 
 import app.*;
+import engine.*;
 
 public class GameDisplayer{
 	private Board board;
 	
+	private Player whitePlayer;
+	private Player blackPlayer;
+
 	private Color lightTileColor = new Color(254,240,187);
 	private Color darkTileColor = new Color(17,12,12);
 	private Color consumeHighlight = Color.YELLOW;
@@ -43,8 +47,11 @@ public class GameDisplayer{
 	private static final Dimension SCALE = new Dimension(600,600);
 	private static final Dimension TILE_SCALE = new Dimension(10,10);
 	
-	public GameDisplayer(Board board) {
+	public GameDisplayer(Board board,Player wPlayer, Player bPlayer) {
 		this.board = board;
+		this.whitePlayer = wPlayer;
+		this.blackPlayer = bPlayer;
+
 		this.gameFrame = new JFrame("Chess");
 		this.gameFrame.setLayout(new BorderLayout());
 		this.gameFrame.setSize(SCALE);
@@ -77,6 +84,17 @@ public class GameDisplayer{
 		board.rock(king_x, king_y, fin_x, fin_y);
 		startOver();
 	}
+
+	public void adjustTurn(){
+		if(whitePlayer.getIsTurn()){
+			whitePlayer.setIsTurn(false);
+			blackPlayer.setIsTurn(true);
+		}
+		else{
+			whitePlayer.setIsTurn(true);
+			blackPlayer.setIsTurn(false);
+		}
+	}
 	
 	
 	private class BoardPanel extends JPanel{
@@ -100,7 +118,10 @@ public class GameDisplayer{
 		}
 		
 	}
-	
+	/*					if((whitePlayer.getIsTurn() && board.getBox(locationX, locationY).getPiece().getColor().equals("white")) ||
+						(blackPlayer.getIsTurn() && board.getBox(locationX, locationY).getPiece().getColor().equals("black"))){ */
+
+
 	private class TilePanel extends JPanel {
 		private int locationX;
 		private int locationY;
@@ -115,45 +136,54 @@ public class GameDisplayer{
 			addMouseListener(new MouseListener() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					if(javax.swing.SwingUtilities.isRightMouseButton(e)) {
-						if(sourceTile != null) {
-							sourceTile = null;
-							startOver();
-						}
-					}
-					else if(javax.swing.SwingUtilities.isLeftMouseButton(e)) {
-						if(sourceTile == null) {
-							sourceTile = board.getBox(locationX, locationY);
-							if(!sourceTile.hasPiece())
+						if(javax.swing.SwingUtilities.isRightMouseButton(e)) {
+							if(sourceTile != null) {
 								sourceTile = null;
-							else
-								highlight(locationX, locationY);
-						}
-						else {
-							destinationTile= board.getBox(locationX, locationY);
-
-							//switch moving piece smoothly
-							if(destinationTile.getPiece() != null && destinationTile.getPiece().getColor().equals(sourceTile.getPiece().getColor())){
-								sourceTile = destinationTile;
 								startOver();
-								highlight(sourceTile.getX(), sourceTile.getY());
-							}
-
-							//make movement
-							else{
-								if(destinationTile.getIsConsumeHighlight() || destinationTile.getIsHighlighted()){
-									updateTable(locationX, locationY);
-									sourceTile = null;
-								}
-								else if(destinationTile.getIsRockHighlight()){
-									updateTable(sourceTile.getX() , sourceTile.getY(), destinationTile.getX(), destinationTile.getY());
-									sourceTile = null;
-								}
-								else
-									destinationTile = null;
 							}
 						}
-					}
+						else if(javax.swing.SwingUtilities.isLeftMouseButton(e)) {
+							if(sourceTile == null) {
+								sourceTile = board.getBox(locationX, locationY);
+								if(!sourceTile.hasPiece())
+									sourceTile = null;
+								else{
+									if((whitePlayer.getIsTurn() && board.getBox(locationX, locationY).getPiece().getColor().equals("white")) ||
+									(blackPlayer.getIsTurn() && board.getBox(locationX, locationY).getPiece().getColor().equals("black"))){
+										highlight(locationX, locationY);
+									}
+									else
+										sourceTile = null;
+								}
+									
+							}
+							else {
+								destinationTile= board.getBox(locationX, locationY);
+	
+								//switch moving piece smoothly
+								if(destinationTile.hasPiece() && destinationTile.getPiece().getColor().equals(sourceTile.getPiece().getColor())){
+									sourceTile = destinationTile;
+									startOver();
+									highlight(sourceTile.getX(), sourceTile.getY());
+								}
+	
+								//make movement
+								else{
+									if(destinationTile.getIsConsumeHighlight() || destinationTile.getIsHighlighted()){
+										updateTable(locationX, locationY);
+										adjustTurn();
+										sourceTile = null;
+									}
+									else if(destinationTile.getIsRockHighlight()){
+										updateTable(sourceTile.getX() , sourceTile.getY(), destinationTile.getX(), destinationTile.getY());
+										adjustTurn();
+										sourceTile = null;
+									}
+									else
+										destinationTile = null;
+								}
+							}
+						}
 				}
 
 				@Override
