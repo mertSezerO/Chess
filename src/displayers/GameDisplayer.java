@@ -118,9 +118,6 @@ public class GameDisplayer{
 		}
 		
 	}
-	/*					if((whitePlayer.getIsTurn() && board.getBox(locationX, locationY).getPiece().getColor().equals("white")) ||
-						(blackPlayer.getIsTurn() && board.getBox(locationX, locationY).getPiece().getColor().equals("black"))){ */
-
 
 	private class TilePanel extends JPanel {
 		private int locationX;

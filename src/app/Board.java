@@ -74,7 +74,7 @@ public class Board {
 		if(activeCheck != null){
 			for(int i=0;i<64 ;i++){
 				if(gametable[i/8][i%8].hasPiece())
-					if(gametable[i/8][i%8].getColor().equals(movingPiece.getColor()) && gametable[i/8][i%8].getPiece() instanceof King)
+					if(gametable[i/8][i%8].getPiece() instanceof King && !gametable[i/8][i%8].getPiece().getColor().equals(movingPiece.getColor()))
 						gametable[i/8][i%8].setCheckHighlight(true);
 			}
 			isCheck = true;
@@ -156,10 +156,31 @@ public class Board {
 		for(int x=0; x<64;x++){
 			if(gametable[x/8][x%8].hasPiece()){
 				if(gametable[x/8][x%8].getPiece().getColor().equals(lastMoved) && gametable[x/8][x%8].getPiece() instanceof Pawn){
-					continue;
+					Pawn pawn = (Pawn)gametable[x/8][x%8].getPiece();
+					int blackOrWhite = pawn.getColor().equals("white") ? -1 : 1;
+					for(int i=-1;i<2;i+=2) {
+						if(pawn.getX()>6)
+							break;
+						if(pawn.getY()+i<0 || pawn.getY()+i>7)
+							continue;
+						if(this.getBox(pawn.getX()+blackOrWhite, pawn.getY()+i).hasPiece()) {
+							Box box = this.getBox(pawn.getX()+blackOrWhite, pawn.getY()+i);
+							if(box.getPiece() instanceof King && !box.getPiece().getColor().equals(pawn.getColor())) 
+								return gametable[x/8][x%8].getPiece();
+						}
+					}
 				}
 				else if(gametable[x/8][x%8].getPiece().getColor().equals(lastMoved) && gametable[x/8][x%8].getPiece() instanceof Knight){
-					continue;	
+					Knight knight = (Knight)gametable[x/8][x%8].getPiece();
+					for(int i=0;i<8;i++) {
+						if(knight.getX()+knight.getXVector(i)>=0 && knight.getX()+knight.getXVector(i)<8 && knight.getY()+knight.getYVector(i)>=0 && knight.getY()+knight.getYVector(i)<8) {
+							if(this.getBox(knight.getX()+knight.getXVector(i), knight.getY()+knight.getYVector(i)).hasPiece()) {
+								Box box = this.getBox(knight.getX()+knight.getXVector(i), knight.getY()+knight.getYVector(i));
+								if(box.getPiece().getColor().equals(moving) && box.getPiece().getTag().equals("King"))
+									return gametable[x/8][x%8].getPiece();
+							}
+						}
+					}
 				}
 				else if(gametable[x/8][x%8].getPiece().getColor().equals(lastMoved) && gametable[x/8][x%8].getPiece() instanceof Rock){
 					Rock rock = (Rock)gametable[x/8][x%8].getPiece();
@@ -207,7 +228,6 @@ public class Board {
 									else
 										break;
 								}
-								
 							}
 						}
 					}
