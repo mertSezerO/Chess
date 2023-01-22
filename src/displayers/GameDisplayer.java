@@ -72,7 +72,7 @@ public class GameDisplayer{
 		boardPanel.removeAll();
 		boardPanel.setTable();
 	}
-	
+
 	//helper method to visualize board
 	public void updateTable(int dest_x, int dest_y) {
 		board.move(dest_x,dest_y);
@@ -95,7 +95,10 @@ public class GameDisplayer{
 			blackPlayer.setIsTurn(false);
 		}
 	}
-	
+
+	public boolean isFinished(){
+		return board.isFinished();
+	}	
 	
 	private class BoardPanel extends JPanel{
 
@@ -170,17 +173,27 @@ public class GameDisplayer{
 										updateTable(locationX, locationY);
 										adjustTurn();
 										sourceTile = null;
+										if(isFinished()){
+											String winner = (whitePlayer.getIsTurn()) ? "Black Player" : "White Player" ;
+											System.out.println("Game finished: " + winner + " wins!");
+											System.exit(0);
+										}
 									}
 									else if(destinationTile.getIsRockHighlight()){
 										updateTable(sourceTile.getX() , sourceTile.getY(), destinationTile.getX(), destinationTile.getY());
 										adjustTurn();
 										sourceTile = null;
+										if(isFinished()){
+											String winner = (whitePlayer.getIsTurn()) ? "Black Player" : "White Player" ;
+											System.out.println("Game finished: " + winner + " wins!");
+											System.exit(0);
+										}
 									}
 									else
 										destinationTile = null;
 								}
 							}
-						}
+						}	
 				}
 
 				@Override

@@ -5,9 +5,12 @@ import java.util.ArrayList;
 
 public class Board {
 	private Box[][] gametable= new Box[8][8];
-	ArrayList<Piece> consumed_pieces = new ArrayList<Piece>();
+	ArrayList<Piece> consumedWhitePieces = new ArrayList<Piece>();
+	ArrayList<Piece> consumedBlackPieces = new ArrayList<Piece>();
 	private Piece movingPiece;
+	private String nextPlayer;
 	private boolean isCheck;
+	private boolean isFinished;
 	
 	public Board() {
 		for(int i=0;i<8;i++)
@@ -55,8 +58,13 @@ public class Board {
 		}
 	}
 	public void move(int dest_x, int dest_y) {
-		if(gametable[dest_x][dest_y].getPiece() != null) 
-			consumed_pieces.add(gametable[dest_x][dest_y].getPiece());
+		if(gametable[dest_x][dest_y].hasPiece()){
+			if(gametable[dest_x][dest_y].getPiece().getColor().equals("white"))
+				consumedWhitePieces.add(gametable[dest_x][dest_y].getPiece());
+			else
+				consumedBlackPieces.add(gametable[dest_x][dest_y].getPiece()) ;
+		}
+			
 		gametable[movingPiece.getX()][movingPiece.getY()].setHasPiece(false);
 		gametable[movingPiece.getX()][movingPiece.getY()].setPiece(null);
 		gametable[dest_x][dest_y].setPiece(movingPiece);
@@ -69,8 +77,8 @@ public class Board {
 			((Rock)movingPiece).setHasMoved(true);
 		else if(movingPiece instanceof King)
 			((King)movingPiece).setIsFirst(false);
-		String next = (movingPiece.getColor().equals("white")) ? "black" : "white";
-		Piece activeCheck = check(next);
+		nextPlayer = (movingPiece.getColor().equals("white")) ? "black" : "white";
+		Piece activeCheck = check(nextPlayer);
 		if(activeCheck != null){
 			for(int i=0;i<64 ;i++){
 				if(gametable[i/8][i%8].hasPiece())
@@ -81,6 +89,8 @@ public class Board {
 		}
 		else
 			isCheck = false;
+		if(checkMate())
+			isFinished = true;
 	}
 	
 	public void rock(int king_x,int king_y,int fin_x,int fin_y) {
@@ -114,11 +124,11 @@ public class Board {
 		Piece threat = check(movingPiece.getColor());
 		gametable[x][y].setPiece(movingPiece);
 		gametable[x][y].setHasPiece(true);
-		if(isCheck){
+		if(isCheck || movingPiece instanceof King){
 			movingPiece.canGo();
 			gametable[x][y].setPiece(null);
 			gametable[x][y].setHasPiece(false);
-			desolveCheck();
+			desolveCheck(movingPiece.getColor());
 			gametable[x][y].setPiece(movingPiece);
 			gametable[x][y].setHasPiece(true);
 		}
@@ -132,7 +142,7 @@ public class Board {
 		}	
 	}
 
-	public void desolveCheck(){
+	public void desolveCheck(String color){
 		for(int i=0;i<64;i++){
 			//when defender could consume, this method is problematic
 			if(gametable[i/8][i%8].getIsHighlighted() || gametable[i/8][i%8].getIsConsumeHighlight()){
@@ -140,10 +150,10 @@ public class Board {
 				boolean b = gametable[i/8][i%8].hasPiece();
 				gametable[i/8][i%8].setHasPiece(true);
 				gametable[i/8][i%8].setPiece(movingPiece);
-				Piece possible = check(movingPiece.getColor());
+				Piece possible = check(color);
 				if(possible != null){
 					gametable[i/8][i%8].setHighlighted(false);
-					gametable[i/8][i%8].setCheckHighlight(false);
+					gametable[i/8][i%8].setConsumeHighlight(false);
 				}
 				gametable[i/8][i%8].setHasPiece(b);
 				gametable[i/8][i%8].setPiece(piece);
@@ -332,6 +342,31 @@ public class Board {
 		return false;
 	}
 
+	public boolean checkMate(){
+		int count=0;
+		ArrayList<Piece> list = (nextPlayer.equals("white")) ? consumedWhitePieces : consumedBlackPieces;
+		for(int i=0;i<64;i++){
+			if(count == 16 - list.size())
+				break;
+			if(gametable[i/8][i%8].hasPiece()){
+				Box box = gametable[i/8][i%8];
+				if(box.getPiece().getColor().equals(nextPlayer)){
+					Piece piece = box.getPiece();
+					normalize();
+					piece.canGo();
+					desolveCheck(piece.getColor());
+					for(int j=0;j<64;j++){
+						if(gametable[j/8][j%8].getIsConsumeHighlight() || gametable[j/8][j%8].getIsHighlighted() ||
+						gametable[j/8][j%8].getIsRockHighlight())
+							return false;
+					}
+					count++;
+				}
+			}
+		}
+		return true;
+	}
+
 	//after move remove highlights
 	public void normalize() {
 		for(int i=0;i<8;i++) {
@@ -354,8 +389,12 @@ public class Board {
 		return gametable[x][y];
 	}
 	
-	public ArrayList<Piece> getConsumed_Pieces(){
-		return consumed_pieces;
+	public ArrayList<Piece> getconsumedWhitePieces(){
+		return consumedWhitePieces;
+	}
+
+	public ArrayList<Piece> getconsumeBlackhitePieces(){
+		return consumedBlackPieces;
 	}
 
 	public Piece getMovingPiece() {
@@ -364,5 +403,9 @@ public class Board {
 
 	public void setMovingPiece(Piece movingPiece) {
 		this.movingPiece = movingPiece;
+	}
+
+	public boolean isFinished(){
+		return isFinished;
 	}
 }
