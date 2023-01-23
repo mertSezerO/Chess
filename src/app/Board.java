@@ -76,6 +76,11 @@ public class Board {
 			((Pawn)movingPiece).setIsFirst(false);
 			if(dest_x == 7 || dest_x ==0)
 				convert(dest_x, dest_y, movingPiece.getColor());
+			if(((Pawn)movingPiece).passBy()){
+				int where = movingPiece.getColor().equals("white") ? 1: -1;
+				gametable[dest_x+where][dest_y].setPiece(null);
+				gametable[dest_x+where][dest_y].setHasPiece(false);
+			}
 		}
 		else if(movingPiece instanceof Rock)
 			((Rock)movingPiece).setHasMoved(true);

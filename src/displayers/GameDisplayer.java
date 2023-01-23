@@ -140,72 +140,72 @@ public class GameDisplayer{
 			addMouseListener(new MouseListener() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-						if(javax.swing.SwingUtilities.isRightMouseButton(e)) {
-							if(sourceTile != null) {
+					if(javax.swing.SwingUtilities.isRightMouseButton(e)) {
+						if(sourceTile != null) {
+							sourceTile = null;
+							startOver();
+						}
+					}
+					else if(javax.swing.SwingUtilities.isLeftMouseButton(e)) {
+						if(sourceTile == null) {
+							sourceTile = board.getBox(locationX, locationY);
+							if(!sourceTile.hasPiece())
 								sourceTile = null;
+							else{
+								if((whitePlayer.getIsTurn() && board.getBox(locationX, locationY).getPiece().getColor().equals("white")) ||
+								(blackPlayer.getIsTurn() && board.getBox(locationX, locationY).getPiece().getColor().equals("black"))){
+									highlight(locationX, locationY);
+								}
+								else
+									sourceTile = null;
+							}
+								
+						}
+						else {
+							destinationTile= board.getBox(locationX, locationY);
+
+							//switch moving piece smoothly
+							if(destinationTile.hasPiece() && destinationTile.getPiece().getColor().equals(sourceTile.getPiece().getColor())){
+								sourceTile = destinationTile;
 								startOver();
+								highlight(sourceTile.getX(), sourceTile.getY());
+							}
+
+							//make movement
+							else{
+								if(destinationTile.getIsConsumeHighlight() || destinationTile.getIsHighlighted()){
+									updateTable(locationX, locationY);
+									adjustTurn();
+									sourceTile = null;
+									if(isFinished()){
+										if(!isCheck()){
+											System.out.println("Game finished: Draw");
+											System.exit(0);
+										}
+										String winner = (whitePlayer.getIsTurn()) ? "Black Player" : "White Player" ;
+										System.out.println("Game finished: " + winner + " wins!");
+										System.exit(1);
+									}
+								}
+								else if(destinationTile.getIsRockHighlight()){
+									updateTable(sourceTile.getX() , sourceTile.getY(), destinationTile.getX(), destinationTile.getY());
+									adjustTurn();
+									sourceTile = null;
+									if(isFinished()){
+										if(!isCheck()){
+											System.out.println("Game finished: Draw");
+											System.exit(0);
+										}
+										String winner = (whitePlayer.getIsTurn()) ? "Black Player" : "White Player" ;
+										System.out.println("Game finished: " + winner + " wins!");
+										System.exit(1);
+									}
+								}
+								else
+									destinationTile = null;
 							}
 						}
-						else if(javax.swing.SwingUtilities.isLeftMouseButton(e)) {
-							if(sourceTile == null) {
-								sourceTile = board.getBox(locationX, locationY);
-								if(!sourceTile.hasPiece())
-									sourceTile = null;
-								else{
-									if((whitePlayer.getIsTurn() && board.getBox(locationX, locationY).getPiece().getColor().equals("white")) ||
-									(blackPlayer.getIsTurn() && board.getBox(locationX, locationY).getPiece().getColor().equals("black"))){
-										highlight(locationX, locationY);
-									}
-									else
-										sourceTile = null;
-								}
-									
-							}
-							else {
-								destinationTile= board.getBox(locationX, locationY);
-	
-								//switch moving piece smoothly
-								if(destinationTile.hasPiece() && destinationTile.getPiece().getColor().equals(sourceTile.getPiece().getColor())){
-									sourceTile = destinationTile;
-									startOver();
-									highlight(sourceTile.getX(), sourceTile.getY());
-								}
-	
-								//make movement
-								else{
-									if(destinationTile.getIsConsumeHighlight() || destinationTile.getIsHighlighted()){
-										updateTable(locationX, locationY);
-										adjustTurn();
-										sourceTile = null;
-										if(isFinished()){
-											if(!isCheck()){
-												System.out.println("Game finished: Draw");
-												System.exit(0);
-											}
-											String winner = (whitePlayer.getIsTurn()) ? "Black Player" : "White Player" ;
-											System.out.println("Game finished: " + winner + " wins!");
-											System.exit(1);
-										}
-									}
-									else if(destinationTile.getIsRockHighlight()){
-										updateTable(sourceTile.getX() , sourceTile.getY(), destinationTile.getX(), destinationTile.getY());
-										adjustTurn();
-										sourceTile = null;
-										if(isFinished()){
-											if(!isCheck()){
-												System.out.println("Game finished: Draw");
-												System.exit(0);
-											}
-											String winner = (whitePlayer.getIsTurn()) ? "Black Player" : "White Player" ;
-											System.out.println("Game finished: " + winner + " wins!");
-											System.exit(1);
-										}
-									}
-									else
-										destinationTile = null;
-								}
-							}
-						}	
+					}	
 				}
 
 				@Override
