@@ -1,6 +1,7 @@
 package app;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 
 public class Board {
@@ -71,8 +72,11 @@ public class Board {
 		gametable[dest_x][dest_y].setHasPiece(true);
 		movingPiece.setX(dest_x);
 		movingPiece.setY(dest_y);
-		if(movingPiece instanceof Pawn)
+		if(movingPiece instanceof Pawn){
 			((Pawn)movingPiece).setIsFirst(false);
+			if(dest_x == 7 || dest_x ==0)
+				convert(dest_x, dest_y, movingPiece.getColor());
+		}
 		else if(movingPiece instanceof Rock)
 			((Rock)movingPiece).setHasMoved(true);
 		else if(movingPiece instanceof King)
@@ -169,7 +173,7 @@ public class Board {
 					Pawn pawn = (Pawn)gametable[x/8][x%8].getPiece();
 					int blackOrWhite = pawn.getColor().equals("white") ? -1 : 1;
 					for(int i=-1;i<2;i+=2) {
-						if(pawn.getX()>6)
+						if(pawn.getX()>6 || pawn.getX()<1)
 							break;
 						if(pawn.getY()+i<0 || pawn.getY()+i>7)
 							continue;
@@ -341,6 +345,24 @@ public class Board {
 		}
 		return false;
 	}
+
+	public void convert(int x,int y,String color) {
+		Scanner input = new Scanner(System.in);
+		System.out.print("Select the piece you want to acquire: ");
+		String i = input.next();
+		switch(i){
+			case "Rock": this.getBox(x,y).setPiece(new Rock(x,y,this,color));
+				break;
+			case "Bishop": this.getBox(x,y).setPiece(new Bishop(x,y,this,color));
+				break;
+			case "Knight": this.getBox(x,y).setPiece(new Knight(x,y,this,color));
+				break;
+			case "Queen": this.getBox(x,y).setPiece(new Queen(x,y,this,color));
+				break;
+		}
+		input.close();
+	}
+	
 
 	public boolean checkMate(){
 		int count=0;

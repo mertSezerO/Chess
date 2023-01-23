@@ -2,11 +2,11 @@ package app;
 
 
 public abstract class Piece {
-	private String tag;
-	private String color;
-	private int x;
-	private int y;
-	private Board board;
+	protected String tag;
+	protected String color;
+	protected int x;
+	protected int y;
+	protected Board board;
 	
 	public Piece(String value,int x,int y,Board board,String color) {
 		this.tag = value;
@@ -70,10 +70,8 @@ class Pawn extends Piece{
 				}
 			}
 			else {
-				if(board.getBox(this.getX()-1, this.getY()).getPiece() == null && this.getX() != 1)
+				if(board.getBox(this.getX()-1, this.getY()).getPiece() == null)
 					board.getBox(this.getX()-1, this.getY()).setHighlighted(true);
-				else
-					convert();
 			}
 			
 			//Consuming enemy for white pawns
@@ -115,9 +113,7 @@ class Pawn extends Piece{
 			}
 		}
 	}
-	public void convert() {
-		
-	}
+
 	public void passByTake() {
 		
 	}
