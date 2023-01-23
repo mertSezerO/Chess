@@ -99,6 +99,10 @@ public class GameDisplayer{
 	public boolean isFinished(){
 		return board.isFinished();
 	}	
+
+	public boolean isCheck(){
+		return board.isCheck();
+	}
 	
 	private class BoardPanel extends JPanel{
 
@@ -174,9 +178,13 @@ public class GameDisplayer{
 										adjustTurn();
 										sourceTile = null;
 										if(isFinished()){
+											if(!isCheck()){
+												System.out.println("Game finished: Draw");
+												System.exit(0);
+											}
 											String winner = (whitePlayer.getIsTurn()) ? "Black Player" : "White Player" ;
 											System.out.println("Game finished: " + winner + " wins!");
-											System.exit(0);
+											System.exit(1);
 										}
 									}
 									else if(destinationTile.getIsRockHighlight()){
@@ -184,9 +192,13 @@ public class GameDisplayer{
 										adjustTurn();
 										sourceTile = null;
 										if(isFinished()){
+											if(!isCheck()){
+												System.out.println("Game finished: Draw");
+												System.exit(0);
+											}
 											String winner = (whitePlayer.getIsTurn()) ? "Black Player" : "White Player" ;
 											System.out.println("Game finished: " + winner + " wins!");
-											System.exit(0);
+											System.exit(1);
 										}
 									}
 									else

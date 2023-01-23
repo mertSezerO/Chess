@@ -427,6 +427,10 @@ public class Board {
 		this.movingPiece = movingPiece;
 	}
 
+	public boolean isCheck(){
+		return isCheck;
+	}
+
 	public boolean isFinished(){
 		return isFinished;
 	}
