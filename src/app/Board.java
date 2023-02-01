@@ -388,7 +388,7 @@ public class Board {
 					desolveCheck(piece.getColor());
 					for(int j=0;j<64;j++){
 						if(gametable[j/8][j%8].getIsConsumeHighlight() || gametable[j/8][j%8].getIsHighlighted() ||
-						gametable[j/8][j%8].getIsRockHighlight())
+							gametable[j/8][j%8].getIsRockHighlight())
 							return false;
 					}
 					count++;

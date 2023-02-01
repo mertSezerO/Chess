@@ -96,6 +96,10 @@ public class GameDisplayer{
 		}
 	}
 
+	public void gameOver(){
+		boardPanel.gameOver();
+	}
+
 	public boolean isFinished(){
 		return board.isFinished();
 	}	
@@ -122,6 +126,12 @@ public class GameDisplayer{
 			}
 			setPreferredSize(BOARD_SCALE);
 			validate();
+		}
+
+		private void gameOver() {
+			for(int i=0;i<64;i++) {
+				boardTiles.get(i).removeAll();
+			}
 		}
 		
 	}
@@ -180,11 +190,13 @@ public class GameDisplayer{
 									if(isFinished()){
 										if(!isCheck()){
 											System.out.println("Game finished: Draw");
-											System.exit(0);
+											gameOver();
 										}
-										String winner = (whitePlayer.getIsTurn()) ? "Black Player" : "White Player" ;
-										System.out.println("Game finished: " + winner + " wins!");
-										System.exit(1);
+										else{
+											String winner = (whitePlayer.getIsTurn()) ? "Black Player" : "White Player" ;
+											System.out.println("Game finished: " + winner + " wins!");
+											gameOver();
+										}
 									}
 								}
 								else if(destinationTile.getIsRockHighlight()){
@@ -194,11 +206,13 @@ public class GameDisplayer{
 									if(isFinished()){
 										if(!isCheck()){
 											System.out.println("Game finished: Draw");
-											System.exit(0);
+											gameOver();
 										}
-										String winner = (whitePlayer.getIsTurn()) ? "Black Player" : "White Player" ;
-										System.out.println("Game finished: " + winner + " wins!");
-										System.exit(1);
+										else{
+											String winner = (whitePlayer.getIsTurn()) ? "Black Player" : "White Player" ;
+											System.out.println("Game finished: " + winner + " wins!");
+											gameOver();
+										}
 									}
 								}
 								else
