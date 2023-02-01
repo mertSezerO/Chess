@@ -48,6 +48,7 @@ public abstract class Piece {
 class Pawn extends Piece{
 	private boolean is_first;
 	private boolean passBy;
+	private boolean movedTwoBoxes;
 	
 	public Pawn(int x,int y,Board board,String color) {
 		super("Pawn",x,y,board,color);
@@ -55,8 +56,8 @@ class Pawn extends Piece{
 		this.getBoard().getBox(x,y).setHasPiece(true);
 	}
 	public void canGo() {
-		Board board = this.getBoard();
 		passBy = false;
+		Board board = this.getBoard();
 		if(this.getColor() == "white") {
 			
 			//Movement for white pawns
@@ -121,9 +122,10 @@ class Pawn extends Piece{
 		if(this.getColor() == "white") {
 			for(int i=-1;i<2;i+=2){
 				if(this.x == 3 && board.getBox(3, this.y +i).hasPiece()){
-					if(board.getBox(3, this.y +i).getPiece() instanceof Pawn && !board.getBox(3, this.y +i).getPiece().getColor().equals(this.color)){
+					if(board.getBox(3, this.y +i).getPiece() instanceof Pawn && !board.getBox(3, this.y +i).getPiece().getColor().equals(this.color) && 
+						((Pawn)(board.getBox(3, this.y +i).getPiece())).getMovedTwoBoxes()){
 						board.getBox(2, this.y +i).setConsumeHighlight(true);
-						passBy =true;
+						passBy = true;
 					}
 				}
 			}
@@ -131,7 +133,8 @@ class Pawn extends Piece{
 		else{
 			for(int i=-1;i<2;i+=2){
 				if(this.x == 4 && board.getBox(4, this.y +i).hasPiece()){
-					if(board.getBox(4, this.y +i).getPiece() instanceof Pawn && !board.getBox(4, this.y +i).getPiece().getColor().equals(this.color)){
+					if(board.getBox(4, this.y +i).getPiece() instanceof Pawn && !board.getBox(4, this.y +i).getPiece().getColor().equals(this.color) &&
+						((Pawn)(board.getBox(4, this.y +i).getPiece())).getMovedTwoBoxes()){
 						board.getBox(5, this.y +i).setConsumeHighlight(true);
 						passBy = true;
 					}
@@ -150,6 +153,14 @@ class Pawn extends Piece{
 
 	public void setIsFirst(boolean tf){
 		is_first = tf;
+	}
+
+	public boolean getMovedTwoBoxes(){
+		return movedTwoBoxes;
+	}
+
+	public void setMovedTwoBoxes(boolean b){
+		movedTwoBoxes = b;
 	}
 }
 

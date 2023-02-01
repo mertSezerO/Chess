@@ -65,7 +65,7 @@ public class Board {
 			else
 				consumedBlackPieces.add(gametable[dest_x][dest_y].getPiece()) ;
 		}
-			
+		int previousX = movingPiece.getX();
 		gametable[movingPiece.getX()][movingPiece.getY()].setHasPiece(false);
 		gametable[movingPiece.getX()][movingPiece.getY()].setPiece(null);
 		gametable[dest_x][dest_y].setPiece(movingPiece);
@@ -73,7 +73,10 @@ public class Board {
 		movingPiece.setX(dest_x);
 		movingPiece.setY(dest_y);
 		if(movingPiece instanceof Pawn){
-			((Pawn)movingPiece).setIsFirst(false);
+			if(dest_x-previousX == 2 || dest_x-previousX == -2)
+				((Pawn)movingPiece).setMovedTwoBoxes(true);
+			else
+				((Pawn)movingPiece).setMovedTwoBoxes(false);
 			if(dest_x == 7 || dest_x ==0)
 				convert(dest_x, dest_y, movingPiece.getColor());
 			if(((Pawn)movingPiece).passBy()){
@@ -81,6 +84,7 @@ public class Board {
 				gametable[dest_x+where][dest_y].setPiece(null);
 				gametable[dest_x+where][dest_y].setHasPiece(false);
 			}
+			((Pawn)movingPiece).setIsFirst(false);
 		}
 		else if(movingPiece instanceof Rock)
 			((Rock)movingPiece).setHasMoved(true);
