@@ -157,8 +157,6 @@ public class Board {
 
 	public void desolveCheck(String color, Piece mPiece){
 		for(int i=0;i<64;i++){
-			//when defender could consume, this method is problematic
-			//movingPiece en son hareket eden taşı tuttuğundan checkMate için kullanılamaz
 			if(gametable[i/8][i%8].getIsHighlighted() || gametable[i/8][i%8].getIsConsumeHighlight()){
 				Piece piece = gametable[i/8][i%8].getPiece();
 				boolean b = gametable[i/8][i%8].hasPiece();
