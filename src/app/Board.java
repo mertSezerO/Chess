@@ -141,7 +141,7 @@ public class Board {
 			movingPiece.canGo();
 			gametable[x][y].setPiece(null);
 			gametable[x][y].setHasPiece(false);
-			desolveCheck(movingPiece.getColor());
+			desolveCheck(movingPiece.getColor(), movingPiece);
 			gametable[x][y].setPiece(movingPiece);
 			gametable[x][y].setHasPiece(true);
 		}
@@ -155,14 +155,15 @@ public class Board {
 		}	
 	}
 
-	public void desolveCheck(String color){
+	public void desolveCheck(String color, Piece mPiece){
 		for(int i=0;i<64;i++){
 			//when defender could consume, this method is problematic
+			//movingPiece en son hareket eden taşı tuttuğundan checkMate için kullanılamaz
 			if(gametable[i/8][i%8].getIsHighlighted() || gametable[i/8][i%8].getIsConsumeHighlight()){
 				Piece piece = gametable[i/8][i%8].getPiece();
 				boolean b = gametable[i/8][i%8].hasPiece();
 				gametable[i/8][i%8].setHasPiece(true);
-				gametable[i/8][i%8].setPiece(movingPiece);
+				gametable[i/8][i%8].setPiece(mPiece);
 				Piece possible = check(color);
 				if(possible != null){
 					gametable[i/8][i%8].setHighlighted(false);
@@ -371,7 +372,6 @@ public class Board {
 		}
 		input.close();
 	}
-	
 
 	public boolean checkMate(){
 		int count=0;
@@ -385,7 +385,7 @@ public class Board {
 					Piece piece = box.getPiece();
 					normalize();
 					piece.canGo();
-					desolveCheck(piece.getColor());
+					desolveCheck(piece.getColor(), piece);
 					for(int j=0;j<64;j++){
 						if(gametable[j/8][j%8].getIsConsumeHighlight() || gametable[j/8][j%8].getIsHighlighted() ||
 							gametable[j/8][j%8].getIsRockHighlight())
